@@ -31,8 +31,8 @@ def combine(movies, sounds):
             'Number of movie files must be equal to number of sound files')
 
     for pair in range(len(movies)):
-        clip = VideoFileClip('movie/' + movies[pair]).subclip(0, 15)
-        sound = AudioFileClip('sound/' + sounds[pair]).subclip(40, 60)
+        clip = VideoFileClip('movie/' + movies[pair])
+        sound = AudioFileClip('sound/' + sounds[pair])
 
         # Crop the sound to video length
         sound = sound.set_duration(clip.duration)
