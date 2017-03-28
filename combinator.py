@@ -6,7 +6,7 @@ from moviepy.audio.io.AudioFileClip import AudioFileClip
 
 def collect_files():
     '''Collect video and audio files.
-    
+
     Returns:
         Tuple with two elements: list of movies, list of sounds
     '''
