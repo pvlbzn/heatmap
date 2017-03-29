@@ -192,10 +192,6 @@ function createHeatmap(apiPath, initialRegion, fakeData) {
         })
     }
 
-    function zipToGeopoint(zip) {
-        ;
-    }
-
     createUI();
 }
 
