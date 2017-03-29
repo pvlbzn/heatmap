@@ -60,6 +60,8 @@ function createUI() {
     // Global references
     geocoder = initGeocoder();
     map = initMap(mapContainer);
+
+    drawBounds(map);
 }
 
 function fetchMarkers() {
@@ -85,7 +87,6 @@ function fetchHeatmap() {
         }
     })
 }
-
 
 function getHeatmapData(data) {
     return collectMarkers(data);
@@ -133,7 +134,6 @@ function collectMarkers(data) {
     return markers
 }
 
-
 // TODO: Add info windows to markers
 // https://developers.google.com/maps/documentation/javascript/infowindows#open
 function renderMarkers(markers) {
@@ -159,6 +159,19 @@ function renderMarkers(markers) {
     });
 
     return bag;
+}
+
+function drawBounds(map) {
+    // Dummy bound
+    var imageBounds = {
+        north: 40.773941,
+        south: 40.712216,
+        east: -74.12544,
+        west: -74.22655
+    };
+
+    let overlay = new google.maps.GroundOverlay('#292929', imageBounds);
+    overlay.setMap(map);
 }
 
 createUI();
