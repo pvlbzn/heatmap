@@ -13,3 +13,12 @@ python3 server.py
 ```
 
 Open the browser at address http://127.0.0.1:5000/
+
+
+
+
+
+## TODO
+
+* custom view on markers
+* over query limit workaround
