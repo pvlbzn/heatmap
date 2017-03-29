@@ -94,7 +94,7 @@ function createHeatmap(apiPath, initialRegion, fakeData) {
     }
 
     function fetchHeatmap() {
-        let markers = getHeatmapData(data);
+        let markers = getHeatmapData(fakeData);
         let bag = renderHeatmap(markers);
     }
 
