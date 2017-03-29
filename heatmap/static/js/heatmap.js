@@ -19,45 +19,47 @@ class Marker {
 }
 
 function createUI() {
-    console.log(apiPath);
     let mapContainer = document.getElementById('mapContainer');
     
-    initHeatmapBtn();
-    initMarkersBtn();
-    initMap(mapContainer);
-    initGeocoder();
-}
+    function initHeatmapBtn() {
+        let btn = document.getElementById('heatmapBtn');
+        btn.addEventListener('click', () => {
+            fetchHeatmap();
+        });
+        return btn;
+    }
 
-function initHeatmapBtn() {
-    let btn = document.getElementById('heatmapBtn');
-    btn.addEventListener('click', () => {
-        fetchHeatmap();
-    })
-}
+    function initMarkersBtn() {
+        let btn = document.getElementById('markersBtn');
+        btn.addEventListener('click', () => {
+            fetchMarkers();
+        });
+        return btn;
+    }
 
-function initMarkersBtn() {
-    let btn = document.getElementById('markersBtn');
-    btn.addEventListener('click', () => {
-        fetchMarkers();
-    })
-}
+    function initMap() {
+        let initialPos = {
+            // Chicago
+            lat: 41.875126,
+            lng: -87.684145
+        };
 
-function initMap(container) {
-    let initialPos = {
-        // Chicago
-        lat: 41.875126,
-        lng: -87.684145
-    };
+        return new google.maps.Map(mapContainer, {
+            center: initialPos,
+            scrollwheel: true,
+            zoom: 4
+        });
+    }
 
-    map = new google.maps.Map(mapContainer, {
-        center: initialPos,
-        scrollwheel: true,
-        zoom: 4
-    });
-}
+    function initGeocoder() {
+        return new google.maps.Geocoder();
+    }
 
-function initGeocoder() {
-    geocoder = new google.maps.Geocoder();
+    let hbtn = initHeatmapBtn();
+    let mbtn = initMarkersBtn();
+    // Global references
+    geocoder = initGeocoder();
+    map = initMap(mapContainer);
 }
 
 function fetchMarkers() {
