@@ -3,8 +3,9 @@
  * 
  * @param {string} apiPath
  */
-function createHeatmap(apiPath) {
+function createHeatmap(apiPath, initialRegion) {
 
+let region = initialRegion ? initialRegion : 'Colorado';
 let path = apiPath ? apiPath : '/api/v1/small';
 let geocoder;
 let map;
@@ -159,19 +160,6 @@ function renderMarkers(markers) {
     });
 
     return bag;
-}
-
-function drawBounds(map) {
-    // Dummy bound
-    var imageBounds = {
-        north: 40.773941,
-        south: 40.712216,
-        east: -74.12544,
-        west: -74.22655
-    };
-
-    let overlay = new google.maps.GroundOverlay('#292929', imageBounds);
-    overlay.setMap(map);
 }
 
 createUI();
