@@ -1,9 +1,11 @@
 /** 
+ * Create Heatmap View.
  * 
  * @param {string} apiPath
  */
 function createHeatmap(apiPath) {
 
+let path = apiPath ? apiPath : '/api/v1/small';
 let geocoder;
 let map;
 
@@ -17,6 +19,7 @@ class Marker {
 }
 
 function createUI() {
+    console.log(apiPath);
     let mapContainer = document.getElementById('mapContainer');
     
     initHeatmapBtn();
@@ -25,8 +28,21 @@ function createUI() {
     initGeocoder();
 }
 
-function initMap(container) {
+function initHeatmapBtn() {
+    let btn = document.getElementById('heatmapBtn');
+    btn.addEventListener('click', () => {
+        fetchHeatmap();
+    })
+}
 
+function initMarkersBtn() {
+    let btn = document.getElementById('markersBtn');
+    btn.addEventListener('click', () => {
+        fetchMarkers();
+    })
+}
+
+function initMap(container) {
     let initialPos = {
         // Chicago
         lat: 41.875126,
@@ -44,25 +60,11 @@ function initGeocoder() {
     geocoder = new google.maps.Geocoder();
 }
 
-function initHeatmapBtn() {
-    let btn = document.getElementById('heatmapBtn');
-    btn.addEventListener('click', () => {
-        fetchHeatmap();
-    })
-}
-
-function initMarkersBtn() {
-    let btn = document.getElementById('markersBtn');
-    btn.addEventListener('click', () => {
-        fetchMarkers();
-    })
-}
-
 function fetchMarkers() {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "/api/v1/small",
+        url: path,
         success: (data) => {
             let markers = collectMarkers(data);
             let bag = renderMarkers(markers);
@@ -74,7 +76,7 @@ function fetchHeatmap() {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "/api/v1/small",
+        url: path,
         success: (data) => {
             let markers = getHeatmapData(data);
             renderHeatmap(markers);
