@@ -3,9 +3,14 @@
 
 <head>
     <link rel="stylesheet" href="#">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <style>
-        #map {
-            height: 100%;
+        #mapContainer {
+            height: 95%;
+        }
+
+        #renderButton {
+            width: 100%;
         }
         
         html,
@@ -18,28 +23,102 @@
 </head>
 
 <body>
-    <div id="map"></div>
+    <div id="mapContainer"></div>
+    <div id="renderDiv"><button id="renderButton" type="button" onclick="fetchData();">Fetch Data</button></div>
     <script>
+
+        let geocoder;
+        let map;
+
+        class Marker {
+            constructor(address, title, id, zip) {
+                this.address = address;
+                this.title = title;
+                this.id = id;
+                this.zip = zip;
+            }
+        }
+
+        /**
+         * Callback which is called on map load. 
+         */
         function initMap() {
-            var myLatLng = {
-                lat: -25.363,
-                lng: 131.044
+            let initialPos = {
+                // Chicago
+                lat: 41.875126,
+                lng: -87.684145
             };
 
-            // Create a map object and specify the DOM element for display.
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: myLatLng,
-                scrollwheel: false,
+            geocoder = new google.maps.Geocoder();
+
+            map = new google.maps.Map(document.getElementById('mapContainer'), {
+                center: initialPos,
+                scrollwheel: true,
                 zoom: 4
             });
 
-            // Create a marker and set its position.
-            var marker = new google.maps.Marker({
+            let marker = new google.maps.Marker({
                 map: map,
-                position: myLatLng,
+                position: initialPos,
                 title: 'Hello World!'
             });
         }
+
+        /**
+         * Callback function which is assigned to fetch UI button. 
+         */
+        function fetchData() {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/api/v1/small",
+                success: (data) => {
+                    let markers = collectMarkers(data);
+                    renderMarkers(markers);
+                }
+            })
+        }
+
+        /**
+         * Create markers for given events.
+         * 
+         * Args:
+         *      data: json object with events.
+         * 
+         * Returns:
+         *      array of Marker objects
+         */
+        function collectMarkers(data) {
+            let markers = [];
+
+            data.events.forEach((event) => {
+                // Common data for each marker
+                let addr = event.address;
+                let title = event.title;
+                let id = event.id;
+                
+                event.zips.forEach((zip) => {
+                    markers.push(new Marker(addr, title, id, zip));
+                });
+            });
+
+            return markers
+        }
+
+        function renderMarkers(markers) {
+            markers.forEach((marker) => {
+                geocoder.geocode({'address': marker.zip}, (res, status) => {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        new google.maps.Marker({
+                            map: map,
+                            position: res[0].geometry.location,
+                            title: marker.title
+                        });
+                    }
+                });
+            });
+        }
+
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz8cE-amjE-Cu14gKGM60inb1LPkzDNpo&callback=initMap" async
         defer></script>
