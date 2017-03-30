@@ -391,9 +391,6 @@ function createHeatmap(apiPath, initialRegion) {
             west_lng <= point.lng &&
             point.lng <= east_lng);
 
-        console.log(clean);
-        console.log('OK');
-
         return clean;
     }
 
