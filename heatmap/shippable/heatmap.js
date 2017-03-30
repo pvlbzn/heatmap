@@ -1,6 +1,6 @@
 /**
  * Create Heatmap view.
- * 
+ *
  * @param {any} apiPath
  * @param {any} initialRegion geo point
  * @param {any} fakeData
@@ -140,16 +140,12 @@ function createHeatmap(apiPath, initialRegion, fakeData) {
             );
         });
 
-        console.log(coord.length);
-
         let heatmap = new google.maps.visualization.HeatmapLayer({
-            data: coord
-        })
+            data: coord,
+            map: map
+        });
 
-        heatmap.maxIntensity = 10;
-        heatmap.dissipating = true;
-        heatmap.opacity = 1;
-        heatmap.setMap(map);
+        heatmap.set('')
     }
 
     /*
@@ -184,7 +180,7 @@ function createHeatmap(apiPath, initialRegion, fakeData) {
                 'address': marker.zip
             }, (res, status) => {
                 if (status == google.maps.GeocoderStatus.OK) {
-                    // Create new marker at the corresponding {lat, lng} pair 
+                    // Create new marker at the corresponding {lat, lng} pair
                     let m = new google.maps.Marker({
                         animation: google.maps.Animation.DROP,
                         map: map,
@@ -211,7 +207,9 @@ function createHeatmap(apiPath, initialRegion, fakeData) {
             let title = event.title;
             let id = event.id;
 
-            event.zips.forEach((zip) => {
+            let pureData = dataSentinel(event.zips);
+
+            pureData.forEach((zip) => {
                 markers.push(new Marker(addr, title, id, zip));
             });
         });
@@ -228,6 +226,32 @@ function createHeatmap(apiPath, initialRegion, fakeData) {
                 title: marker.title
             })
         })
+    }
+
+    
+    /**
+     * Data sentinel secures data consistency
+     * 
+     * Filter out data which is not belong to US from the dataset.
+     * 
+     * Feature: We can cut data by states in this fashion
+     *      http://answers.google.com/answers/threadview?id=149284
+     */
+    function dataSentinel(data) {
+        let north_lat =  49.3457868;      // top
+        let west_lng  = -124.7844079;     // left
+        let east_lng  = -66.9513812;      // right
+        let south_lat =  24.7433195;      // bottom
+
+        let clean = data.filter(point =>
+            south_lat <= point.lat &&
+            point.lat <= north_lat &&
+            west_lng <= point.lng  &&
+            point.lng <= east_lng);
+
+        console.log(clean);
+
+        return clean;
     }
 
     createUI();
@@ -264,6 +288,7 @@ function previewWrapper() {
             }
         })
     }
+
 
     nameToGeopoint('Los Angeles');
 }
