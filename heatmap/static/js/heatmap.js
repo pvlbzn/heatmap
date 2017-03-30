@@ -12,7 +12,7 @@ function createHeatmap(apiPath, initialRegion, isPolitical) {
     let political = true;
     if (isPolitical == false) political = false;
     
-    // If pass is given, use it. Otherwise API path can be hardcoded here
+    // If path is given, use it. Otherwise API path can be hardcoded here
     let path = apiPath ? apiPath : '/api/v1/small';
     let region = initialRegion ? initialRegion : {
         lat: 36.778261,
