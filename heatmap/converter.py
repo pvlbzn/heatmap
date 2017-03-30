@@ -8,7 +8,8 @@ def zip_to_point(zip):
 
     try:
         reqJSON = requests.get(url + query).json()
-        point = dict(lat=reqJSON[0]['lat'], lng=reqJSON[0]['lon'])
+        point = dict(
+            lat=float(reqJSON[0]['lat']), lng=float(reqJSON[0]['lon']))
         print(str(zip) + ' -> ' + str(point))
         return point
     except IndexError as error:
