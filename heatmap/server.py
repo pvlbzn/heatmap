@@ -1,9 +1,6 @@
-from flask import Flask, render_template
-from geopy.geocoders import Nominatim
+from flask import Flask
 
-# Initializers
 app = Flask(__name__)
-locator = Nominatim()
 
 
 @app.route('/')
@@ -11,16 +8,9 @@ def main():
     return render_template('index.html')
 
 
-@app.route('/api/v1/<string:event>')
+@app.route('/api/v1/<event>')
 def event_handler(event):
-    if event == 'small':
-        fname = 'small_event.json'
-    elif event == 'multiple':
-        fname = 'multiple_events.json'
-    else:
-        return 'Unknow Request'
-
-    with open('events/' + fname, 'r') as container:
+    with open('events/event_sample.json', 'r') as container:
         data = container.read()
 
     return data
