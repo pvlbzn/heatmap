@@ -1,45 +1,21 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <link rel="stylesheet" href="#">
-    <script src="{{ url_for('static', filename='js/heatmap.js') }}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <style>
-        #mapContainer {
-            height: 100%;
-        }
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
 
-        #floating-panel {
-            position: absolute;
-            top: 10px;
-            left: 25%;
-            z-index: 5;
-            text-align: center;
-            font-family: 'Roboto', 'sans-serif';
-            line-height: 30px;
-            padding-left: 10px;
-        }
+    <body>
 
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
+        <div id="floating-panel">
+            <button id="heatmapBtn">Fetch Heatmap</button>
+            <button id="markersBtn">Fetch Markers</button>
+        </div>
+        <div id="mapContainer"></div>
 
-<body>
-
-    <div id="floating-panel">
-        <button id="heatmapBtn">Fetch Heatmap</button>
-        <button id="markersBtn">Fetch Markers</button>
-    </div>
-    <div id="mapContainer"></div>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz8cE-amjE-Cu14gKGM60inb1LPkzDNpo&callback=createHeatmap&libraries=visualization"
-        async defer></script>
-</body>
+        <script src="{{ url_for('static', filename='js/heatmap.js') }}"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz8cE-amjE-Cu14gKGM60inb1LPkzDNpo&callback=previewWrapper&libraries=visualization"></script>
+    </body>
 
 </html>
