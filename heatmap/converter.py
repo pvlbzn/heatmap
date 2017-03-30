@@ -8,10 +8,10 @@ def zip_to_point(zip):
 
     try:
         reqJSON = requests.get(url + query).json()
-        point = dict(
-            lat=float(reqJSON[0]['lat']), lng=float(reqJSON[0]['lon']))
+        point = {"lat": reqJSON[0]["lat"], "lng": reqJSON[0]["lon"]}
         print(str(zip) + ' -> ' + str(point))
         return point
+
     except IndexError as error:
         print('ERROR: ' + str(error) + ' with zip: ' + str(zip))
 
@@ -32,7 +32,7 @@ def write_data(data, path):
 
 
 if __name__ == '__main__':
-    with open('events/small_event.json', 'r') as f:
+    with open('events/multiple_events.json', 'r') as f:
         data = json.load(f)
 
     res = extract_zips(data)
