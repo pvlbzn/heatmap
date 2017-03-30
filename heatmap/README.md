@@ -25,8 +25,8 @@ _Heatmap_, triggered by _Fetch Heatmap_ button
 
 ![heatmap](https://github.com/pvlbzn/client_showcase/blob/master/heatmap/ui/heatmap.png)
 
-_Both_
-![both](https://github.com/pvlbzn/client_showcase/raw/master/heatmap/ui/heatmap_markers.png)
+_Labels_
+![both](https://github.com/pvlbzn/client_showcase/raw/master/heatmap/ui/labels.png)
 
 
 ## Architecture
