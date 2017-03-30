@@ -5,19 +5,12 @@
  * @param {string} apiPath 
  * @param {{lat: float, lng: float}} initialRegion initial region is the region
  *          where map will aim by default. 
- * @param {bool} isPolitical true by default, will render "political" style,
- *          normal map otherwise.
+ * @param {bool} isPolitical political map will be rendered if true, normal map
+ *          otherwise.
  */
-function createHeatmap(apiPath, initialRegion, isPolitical) {
-    let political = true;
-    if (isPolitical == false) political = false;
-    
-    // If path is given, use it. Otherwise API path can be hardcoded here
-    let path = apiPath ? apiPath : '/api/v1/small';
-    let region = initialRegion ? initialRegion : {
-        lat: 36.778261,
-        lng: -119.41793239999998
-    };
+function createHeatmap(apiPath,
+                       initialRegion={lat: 40.456322, lng: -101.691682},
+                       isPolitical=true) {
     let geocoder;
     let map;
 
@@ -72,7 +65,7 @@ function createHeatmap(apiPath, initialRegion, isPolitical) {
 
             let style = [];
 
-            if (political) {
+            if (isPolitical) {
                 style = [{
                         "elementType": "geometry",
                         "stylers": [{
@@ -266,9 +259,9 @@ function createHeatmap(apiPath, initialRegion, isPolitical) {
             }
 
             return new google.maps.Map(mapContainer, {
-                center: region,
+                center: initialRegion,
                 scrollwheel: true,
-                zoom: 7,
+                zoom: 5,
                 styles: style
             });
         }
@@ -308,7 +301,7 @@ function createHeatmap(apiPath, initialRegion, isPolitical) {
     function fetchMarkers() {
         $.ajax({
             type: "GET",
-            url: path,
+            url: apiPath,
             success: (data) => {
                 let parsedData = JSON.parse(data);
                 let markers = collectMarkers(parsedData);
@@ -320,7 +313,7 @@ function createHeatmap(apiPath, initialRegion, isPolitical) {
     function fetchHeatmap() {
         $.ajax({
             type: "GET",
-            url: path,
+            url: apiPath,
             success: (data) => {
                 let parsedData = JSON.parse(data);
                 let markers = collectMarkers(parsedData);
