@@ -1,26 +1,39 @@
 import json
-import geocoder
+import requests
 
 
 def zip_to_point(zip):
+    url = 'http://nominatim.openstreetmap.org/search/?'
+    query = 'country=US&limit=1&format=json&postalcode=' + str(zip)
+
     try:
-        g = geocoder.google(zip)
-        print(g.latlng)
-        return {'lat': g.latlng[0], 'lng': g.latlng[1]}
-    except IndexError as err:
-        print(err)
+        reqJSON = requests.get(url + query).json()
+        point = dict(lat=reqJSON[0]['lat'], lng=reqJSON[0]['lon'])
+        print(str(zip) + ' -> ' + str(point))
+        return point
+    except IndexError as error:
+        print('ERROR: ' + str(error) + ' with zip: ' + str(zip))
 
 
-if __name__ == '__main__':
-    # Open given data file
-    with open('events/multiple_events.json', 'r') as f:
-        data = json.load(f)
-
+def extract_zips(data):
     res = []
 
     for item in data['events'][0]['zips']:
-        res.insert(0, zip_to_point(item))
+        res.append(zip_to_point(item))
 
-    with open('events/latlng', 'w') as w:
-        for point in res:
-            w.write(', ' + str(point))
+    return res
+
+
+def write_data(data, path):
+    with open(path, 'w') as container:
+        for point in data:
+            container.write(', ' + str(point))
+
+
+if __name__ == '__main__':
+    with open('events/small_event.json', 'r') as f:
+        data = json.load(f)
+
+    res = extract_zips(data)
+
+    write_data(res, 'events/latlng_small')
