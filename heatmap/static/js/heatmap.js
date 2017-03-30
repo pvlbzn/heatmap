@@ -9,7 +9,7 @@
  *          otherwise.
  */
 function createHeatmap(apiPath,
-                       initialRegion={lat: 40.456322, lng: -101.691682},
+                       initialRegion={lat: 39.50, lng: -98.35},
                        isPolitical=true) {
     let geocoder;
     let map;
