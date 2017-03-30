@@ -1,8 +1,20 @@
-function createHeatmap(apiPath, initialRegion) {
 
+/**
+ * Create a Heatmap
+ * 
+ * @param {string} apiPath 
+ * @param {{lat: float, lng: float}} initialRegion initial region is the region
+ *          where map will aim by default. 
+ * @param {bool} isPolitical true by default, will render "political" style,
+ *          normal map otherwise.
+ */
+function createHeatmap(apiPath, initialRegion, isPolitical) {
     // If pass is given, use it. Otherwise API path can be hardcoded here
+    let political = true;
+    if (isPolitical == false) political = false;
+    
     let path = apiPath ? apiPath : '/api/v1/small';
-    let region = {
+    let region = initialRegion ? initialRegion : {
         lat: 36.778261,
         lng: -119.41793239999998
     };
@@ -58,11 +70,10 @@ function createHeatmap(apiPath, initialRegion) {
 
         function initMap() {
 
-            return new google.maps.Map(mapContainer, {
-                center: region,
-                scrollwheel: true,
-                zoom: 7,
-                styles: [{
+            let style = [];
+
+            if (political) {
+                style = [{
                         "elementType": "geometry",
                         "stylers": [{
                             "color": "#f5f5f5"
@@ -250,6 +261,15 @@ function createHeatmap(apiPath, initialRegion) {
                         }]
                     }
                 ]
+            } else {
+                style = '';
+            }
+
+            return new google.maps.Map(mapContainer, {
+                center: region,
+                scrollwheel: true,
+                zoom: 7,
+                styles: style
             });
         }
 
