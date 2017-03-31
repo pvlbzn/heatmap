@@ -251,44 +251,12 @@ function createMap(apiPath,
 
         return initMap();
     }
-    
-    function fetchMarkers(path) {
+
+    function fetch(path, callback) {
         $.ajax({
             type: "GET",
             url: path,
-            success: (data) => {
-                let parsedData = JSON.parse(data);
-                let markers = collectMarkers(parsedData);
-
-                createMarkers(markers);
-            }
-        });
-    }
-
-    function fetchHeatmap(path) {
-        $.ajax({
-            type: "GET",
-            url: path,
-            success: (data) => {
-                let parsedData = JSON.parse(data);
-                let markers = collectMarkers(parsedData);
-
-                renderHeatmap(markers);
-            }
-        });
-    }
-
-    function fetchBoth(path) {
-        $.ajax({
-            type: "GET",
-            url: path,
-            success: (data) => {
-                let parsedData = JSON.parse(data);
-                let markers = collectMarkers(parsedData);
-
-                renderHeatmap(markers);
-                createMarkers(markers);
-            }
+            success: callback
         });
     }
 
@@ -310,7 +278,7 @@ function createMap(apiPath,
         return markers;
     }
 
-    function createMarkers(markers) {
+    function renderMarkers(markers) {
         markers.forEach((marker) => {
             let m = new google.maps.Marker({
                 // Performance issue on a big dataset
@@ -372,9 +340,29 @@ function createMap(apiPath,
     }
 
     function renderUI() {
-        if (showHeatmap && showMarkers) fetchBoth(apiPath);
-        if (showHeatmap) fetchHeatmap(apiPath);
-        if (showMarkers) fetchMarkers(apiPath);
+        if (showHeatmap && showMarkers) {
+            fetch(apiPath, data => {
+                let parsedData = JSON.parse(data);
+                let markers = collectMarkers(parsedData);
+                renderHeatmap(markers);
+                renderMarkers(markers);
+            });
+
+        } else if (showHeatmap) {
+            fetch(apiPath, data => {
+                let parsedData = JSON.parse(data);
+                let markers = collectMarkers(parsedData);
+                renderHeatmap(markers);
+            });
+            
+        } else if (showMarkers) {
+            fetch(apiPath, data => {
+                let parsedData = JSON.parse(data);
+                let markers = collectMarkers(parsedData);
+
+                renderMarkers(markers);
+            });
+        }
     }
 
     const map = createUI();

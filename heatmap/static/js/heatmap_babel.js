@@ -229,43 +229,11 @@ function createMap(apiPath, containerId) {
         return initMap();
     }
 
-    function fetchMarkers(path) {
+    function fetch(path, callback) {
         $.ajax({
             type: "GET",
             url: path,
-            success: function success(data) {
-                var parsedData = JSON.parse(data);
-                var markers = collectMarkers(parsedData);
-
-                createMarkers(markers);
-            }
-        });
-    }
-
-    function fetchHeatmap(path) {
-        $.ajax({
-            type: "GET",
-            url: path,
-            success: function success(data) {
-                var parsedData = JSON.parse(data);
-                var markers = collectMarkers(parsedData);
-
-                renderHeatmap(markers);
-            }
-        });
-    }
-
-    function fetchBoth(path) {
-        $.ajax({
-            type: "GET",
-            url: path,
-            success: function success(data) {
-                var parsedData = JSON.parse(data);
-                var markers = collectMarkers(parsedData);
-
-                renderHeatmap(markers);
-                createMarkers(markers);
-            }
+            success: callback
         });
     }
 
@@ -283,7 +251,7 @@ function createMap(apiPath, containerId) {
         return markers;
     }
 
-    function createMarkers(markers) {
+    function renderMarkers(markers) {
         markers.forEach(function (marker) {
             var m = new google.maps.Marker({
                 // Performance issue on a big dataset
@@ -338,9 +306,27 @@ function createMap(apiPath, containerId) {
     }
 
     function renderUI() {
-        if (showHeatmap && showMarkers) fetchBoth(apiPath);
-        if (showHeatmap) fetchHeatmap(apiPath);
-        if (showMarkers) fetchMarkers(apiPath);
+        if (showHeatmap && showMarkers) {
+            fetch(apiPath, function (data) {
+                var parsedData = JSON.parse(data);
+                var markers = collectMarkers(parsedData);
+                renderHeatmap(markers);
+                renderMarkers(markers);
+            });
+        } else if (showHeatmap) {
+            fetch(apiPath, function (data) {
+                var parsedData = JSON.parse(data);
+                var markers = collectMarkers(parsedData);
+                renderHeatmap(markers);
+            });
+        } else if (showMarkers) {
+            fetch(apiPath, function (data) {
+                var parsedData = JSON.parse(data);
+                var markers = collectMarkers(parsedData);
+
+                renderMarkers(markers);
+            });
+        }
     }
 
     var map = createUI();
