@@ -14,8 +14,14 @@
         </div>
         <div id="mapContainer"></div>
 
+        <!-- First load google maps -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz8cE-amjE-Cu14gKGM60inb1LPkzDNpo&libraries=visualization"></script>
+        <!-- Next custom script -->
         <script src="{{ url_for('static', filename='js/heatmap_babel.js') }}"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz8cE-amjE-Cu14gKGM60inb1LPkzDNpo&callback=createHeatmap&libraries=visualization"></script>
+        <!-- Third initialize it -->
+        <!-- Map initialization function -->
+        <!-- createHeatmap(apiPath, initialRegion, isPolitical) -->
+        <script>createHeatmap('api/v1/small', {lat: 39.50, lng: -98.35}, false)</script>
     </body>
 
 </html>
