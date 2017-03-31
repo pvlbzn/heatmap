@@ -20,12 +20,6 @@ function createMap(apiPath, containerId) {
     var showHeatmap = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
     var showMarkers = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
 
-    var geocoder = void 0;
-    var map = void 0;
-
-    // Collection of marker objects which are rendered on map view
-    var markerBag = [];
-
     /**
      * Marker class represents Marker datastructure which contains
      * information about marker.
@@ -34,7 +28,6 @@ function createMap(apiPath, containerId) {
      *
      * @class Marker
      */
-
     var Marker = function Marker(address, title, id, zip) {
         _classCallCheck(this, Marker);
 
@@ -54,10 +47,6 @@ function createMap(apiPath, containerId) {
 
         // Set container height
         mapContainer.style.height = '100%';
-
-        function initGeocoder() {
-            return new google.maps.Geocoder();
-        }
 
         function initMap() {
 
@@ -237,32 +226,45 @@ function createMap(apiPath, containerId) {
             });
         }
 
-        // Global references
-        geocoder = initGeocoder();
-        map = initMap();
+        return initMap();
     }
 
-    // Improvement: if data already fetched, no reason to fetch it again
-    function fetchMarkers() {
+    function fetchMarkers(path) {
         $.ajax({
             type: "GET",
-            url: apiPath,
+            url: path,
             success: function success(data) {
                 var parsedData = JSON.parse(data);
                 var markers = collectMarkers(parsedData);
-                var bag = createMarkers(markers);
+
+                createMarkers(markers);
             }
         });
     }
 
-    function fetchHeatmap() {
+    function fetchHeatmap(path) {
         $.ajax({
             type: "GET",
-            url: apiPath,
+            url: path,
             success: function success(data) {
                 var parsedData = JSON.parse(data);
                 var markers = collectMarkers(parsedData);
-                var bag = renderHeatmap(markers);
+
+                renderHeatmap(markers);
+            }
+        });
+    }
+
+    function fetchBoth(path) {
+        $.ajax({
+            type: "GET",
+            url: path,
+            success: function success(data) {
+                var parsedData = JSON.parse(data);
+                var markers = collectMarkers(parsedData);
+
+                renderHeatmap(markers);
+                createMarkers(markers);
             }
         });
     }
@@ -282,9 +284,6 @@ function createMap(apiPath, containerId) {
     }
 
     function createMarkers(markers) {
-        // Global variable, stores google.maps.Marker objects
-        markerBag = [];
-
         markers.forEach(function (marker) {
             var m = new google.maps.Marker({
                 // Performance issue on a big dataset
@@ -293,8 +292,6 @@ function createMap(apiPath, containerId) {
                 position: marker.zip,
                 title: marker.title
             });
-
-            markerBag.push(m);
 
             google.maps.event.addListener(m, 'click', function () {
                 var info = new google.maps.InfoWindow();
@@ -341,10 +338,11 @@ function createMap(apiPath, containerId) {
     }
 
     function renderUI() {
-        if (showHeatmap) fetchHeatmap();
-        if (showMarkers) fetchMarkers();
+        if (showHeatmap && showMarkers) fetchBoth(apiPath);
+        if (showHeatmap) fetchHeatmap(apiPath);
+        if (showMarkers) fetchMarkers(apiPath);
     }
 
-    createUI();
+    var map = createUI();
     renderUI();
 }

@@ -249,9 +249,7 @@ function createMap(apiPath,
             });
         }
 
-        map = initMap();
-
-        return map;
+        return initMap();
     }
     
     function fetchMarkers(path) {
