@@ -17,12 +17,6 @@ function createMap(apiPath,
                    isPolitical=true,
                    showHeatmap=true,
                    showMarkers=true) {
-    let geocoder;
-    let map;
-
-    // Collection of marker objects which are rendered on map view
-    let markerBag = [];
-
 
     /**
      * Marker class represents Marker datastructure which contains
@@ -49,10 +43,6 @@ function createMap(apiPath,
 
         // Set container height
         mapContainer.style.height = '100%';
-
-        function initGeocoder() {
-            return new google.maps.Geocoder();
-        }
 
         function initMap() {
 
@@ -259,34 +249,49 @@ function createMap(apiPath,
             });
         }
 
-        // Global references
-        geocoder = initGeocoder();
         map = initMap();
-    }
 
-    // Improvement: if data already fetched, no reason to fetch it again
-    function fetchMarkers() {
+        return map;
+    }
+    
+    function fetchMarkers(path) {
         $.ajax({
             type: "GET",
-            url: apiPath,
+            url: path,
             success: (data) => {
                 let parsedData = JSON.parse(data);
                 let markers = collectMarkers(parsedData);
-                let bag = createMarkers(markers);
+
+                createMarkers(markers);
             }
-        })
+        });
     }
 
-    function fetchHeatmap() {
+    function fetchHeatmap(path) {
         $.ajax({
             type: "GET",
-            url: apiPath,
+            url: path,
             success: (data) => {
                 let parsedData = JSON.parse(data);
                 let markers = collectMarkers(parsedData);
-                let bag = renderHeatmap(markers);
+
+                renderHeatmap(markers);
             }
-        })
+        });
+    }
+
+    function fetchBoth(path) {
+        $.ajax({
+            type: "GET",
+            url: path,
+            success: (data) => {
+                let parsedData = JSON.parse(data);
+                let markers = collectMarkers(parsedData);
+
+                renderHeatmap(markers);
+                createMarkers(markers);
+            }
+        });
     }
 
     function collectMarkers(data) {
@@ -308,9 +313,6 @@ function createMap(apiPath,
     }
 
     function createMarkers(markers) {
-        // Global variable, stores google.maps.Marker objects
-        markerBag = []
-
         markers.forEach((marker) => {
             let m = new google.maps.Marker({
                 // Performance issue on a big dataset
@@ -320,8 +322,6 @@ function createMap(apiPath,
                 title: marker.title
             });
 
-            markerBag.push(m);
-
             google.maps.event.addListener(m, 'click', function () {
                 let info = new google.maps.InfoWindow();
                 info.setContent(
@@ -330,8 +330,7 @@ function createMap(apiPath,
                     '<b>ID:</b> ' + marker.id + '<br>');
                 info.open(map, this);
             });
-
-        })
+        });
     }
 
     function renderHeatmap(markers) {
@@ -375,10 +374,11 @@ function createMap(apiPath,
     }
 
     function renderUI() {
-        if (showHeatmap) fetchHeatmap();
-        if (showMarkers) fetchMarkers();
+        if (showHeatmap && showMarkers) fetchBoth(apiPath);
+        if (showHeatmap) fetchHeatmap(apiPath);
+        if (showMarkers) fetchMarkers(apiPath);
     }
 
-    createUI();
+    const map = createUI();
     renderUI();
 }
