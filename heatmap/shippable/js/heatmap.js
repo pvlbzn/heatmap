@@ -1,16 +1,22 @@
 
 /**
- * Create a Heatmap
- * 
- * @param {string} apiPath 
+ * Create a map.
+ *
+ * @param {string} apiPath API path string
+ * @param {string} containerId container ID to which map will be attached
  * @param {{lat: float, lng: float}} initialRegion initial region is the region
- *          where map will aim by default. 
+ *          where map will aim by default
  * @param {bool} isPolitical political map will be rendered if true, normal map
- *          otherwise.
+ *          otherwise
+ * @param {bool} showHeatmap render heatmap on the map
+ * @param {bool} showMarkers render markers on the map
  */
-function createHeatmap(apiPath,
-                       initialRegion={lat: 39.50, lng: -98.35},
-                       isPolitical=true) {
+function createMap(apiPath,
+                   containerId,
+                   initialRegion={lat: 39.50, lng: -98.35},
+                   isPolitical=true,
+                   showHeatmap=true,
+                   showMarkers=true) {
     let geocoder;
     let map;
 
@@ -21,9 +27,9 @@ function createHeatmap(apiPath,
     /**
      * Marker class represents Marker datastructure which contains
      * information about marker.
-     * 
+     *
      * Note: do not confuse with google.maps.Marker
-     * 
+     *
      * @class Marker
      */
     class Marker {
@@ -36,26 +42,13 @@ function createHeatmap(apiPath,
     }
 
     /**
-     * Create interface 
+     * Create interface
      */
     function createUI() {
-        let mapContainer = document.getElementById('mapContainer');
+        let mapContainer = document.getElementById(containerId);
 
-        function initHeatmapBtn() {
-            let btn = document.getElementById('heatmapBtn');
-            btn.addEventListener('click', () => {
-                fetchHeatmap();
-            });
-            return btn;
-        }
-
-        function initMarkersBtn() {
-            let btn = document.getElementById('markersBtn');
-            btn.addEventListener('click', () => {
-                fetchMarkers();
-            });
-            return btn;
-        }
+        // Set container height
+        mapContainer.style.height = '100%';
 
         function initGeocoder() {
             return new google.maps.Geocoder();
@@ -266,36 +259,10 @@ function createHeatmap(apiPath,
             });
         }
 
-        let hbtn = initHeatmapBtn();
-        let mbtn = initMarkersBtn();
-
         // Global references
         geocoder = initGeocoder();
-        map = initMap(mapContainer);
+        map = initMap();
     }
-
-    /*
-    function nameToGeopoint(name) {
-        geocoder = new google.maps.Geocoder();
-        geocoder.geocode({
-            'address': name
-        }, (res, status) => {
-            if (status == google.maps.GeocoderStatus.OK) {
-                let point = {
-                    lat: res[0].geometry.location.lat(),
-                    lng: res[0].geometry.location.lng()
-                };
-                console.log(point);
-                return point;
-            } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-                // Over query event
-                console.error(status);
-            } else {
-                console.error('ERROR: ' + status);
-            }
-        })
-    }
-    */
 
     // Improvement: if data already fetched, no reason to fetch it again
     function fetchMarkers() {
@@ -386,9 +353,9 @@ function createHeatmap(apiPath,
 
     /**
      * Data sentinel secures data consistency
-     * 
+     *
      * Filter out data which is not belong to US from the dataset.
-     * 
+     *
      * Feature: We can cut data by states in this fashion
      *      http://answers.google.com/answers/threadview?id=149284
      */
@@ -407,5 +374,11 @@ function createHeatmap(apiPath,
         return clean;
     }
 
+    function renderUI() {
+        if (showHeatmap) fetchHeatmap();
+        if (showMarkers) fetchMarkers();
+    }
+
     createUI();
+    renderUI();
 }
