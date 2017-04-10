@@ -11,14 +11,14 @@
         <div id="mapContainer"></div>
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz8cE-amjE-Cu14gKGM60inb1LPkzDNpo&libraries=visualization"></script>
-        <script src="{{ url_for('static', filename='js/heatmap.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/heatmap_es5.js') }}"></script>
         <script>
         generateMap('api/v1/small',
                     'mapContainer', 
                     {lat: 39.50, lng: -98.35},
                     true, // isPolitical
                     true, // showEvents
-                    false, // showLeads
+                    true, // showLeads
                     true // showHeatmap
                     )
         </script>

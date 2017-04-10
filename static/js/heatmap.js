@@ -378,7 +378,7 @@ function generateMap(apiPath,
     }
 
     function renderUI(showLeads, showEvents, showHeatmap) {
-        shouldFetchData = showLeads || showEvents || showHeatmap;
+        const shouldFetchData = showLeads || showEvents || showHeatmap;
 
         if (shouldFetchData) {
             fetch(apiPath, data => renderData(data, showLeads, showEvents, showHeatmap));
