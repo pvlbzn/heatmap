@@ -2,16 +2,14 @@
 /**
  * Create a map.
  *
- * @param {string} apiPath API path string
- * @param {string} containerId container ID to which map will be attached
- * @param {{lat: float, lng: float}} initialRegion initial region is the region
- *          where map will aim by default
- * @param {bool} isPolitical political map will be rendered if true, normal map
- *          otherwise
- * @param {bool} showHeatmap render heatmap on the map
- * @param {bool} showMarkers render markers on the map
+ * @param {string} apiPath API path
+ * @param {string} containerId container ID that the map will be attached to
+ * @param {{lat: float, lng: float}} initialRegion initial coordinates that the map is centered on
+ * @param {bool} isPolitical renders a political map if this is set to true and a geographical map otherwise
+ * @param {bool} showHeatmap renders the heatmap if set to true
+ * @param {bool} showMarkers renders markers if set to true
  */
-function createMap(apiPath,
+function generateMap(apiPath,
                    containerId,
                    initialRegion={lat: 39.50, lng: -98.35},
                    isPolitical=true,
@@ -19,10 +17,9 @@ function createMap(apiPath,
                    showMarkers=true) {
 
     /**
-     * Marker class represents Marker datastructure which contains
-     * information about marker.
+     * A class representing Marker data.
      *
-     * Note: do not confuse with google.maps.Marker
+     * Not to be confused with google.maps.Marker
      *
      * @class Marker
      */
@@ -317,12 +314,9 @@ function createMap(apiPath,
     }
 
     /**
-     * Data sentinel secures data consistency
+     * Data sentinel ensures data consistency by filtering out points that are not located in the US.
      *
-     * Filter out data which is not belong to US from the dataset.
-     *
-     * Feature: We can cut data by states in this fashion
-     *      http://answers.google.com/answers/threadview?id=149284
+     * Source: http://answers.google.com/answers/threadview?id=149284
      */
     function dataSentinel(data) {
         let north_lat = 49.3457868; // top
@@ -359,7 +353,6 @@ function createMap(apiPath,
             fetch(apiPath, data => {
                 let parsedData = JSON.parse(data);
                 let markers = collectMarkers(parsedData);
-
                 renderMarkers(markers);
             });
         }

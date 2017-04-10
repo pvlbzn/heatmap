@@ -1,7 +1,7 @@
 {
     "events": [{
-        "address": "Winter Park, CO",
-        "title": "Winter Park 9/3",
+        "address": "1201 S Figueroa St, Los Angeles, CA 90015",
+        "title": "S Figueroa St",
         "id": 27,
         "locations": [{
             "lng": -104.977907542557,
@@ -228,8 +228,8 @@
         }],
         "total": 75
     }, {
-        "address": "Another Test Event",
-        "title": "Test Event",
+        "address": "1600 Amphitheatre Parkway, Mountain View, CA",
+        "title": "Amphitheatre Parkway",
         "id": 200,
         "locations": [{
                 "lat": 33.9607196398526,

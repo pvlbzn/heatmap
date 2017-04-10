@@ -10,7 +10,7 @@ def main():
 
 @app.route('/api/v1/<event>')
 def event_handler(event):
-    with open('events/event_sample.json', 'r') as container:
+    with open('events/sample.json', 'r') as container:
         data = container.read()
 
     return data
