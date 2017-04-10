@@ -375,36 +375,21 @@ function generateMap(apiPath,
         return clean;
     }
 
-    function renderUI() {
+    function renderUI(showLeads, showEvents) {
         if (showLeads) {
-            if (showHeatmap && showMarkers) {
-                fetch(apiPath, data => {
-                    let parsedData = JSON.parse(data);
-                    let markers = collectMarkers(parsedData);
-                    renderHeatmap(markers);
-                    renderMarkers(markers);
-                });
+            fetch(apiPath, data => {
+                let parsedData = JSON.parse(data);
+                let markers = collectMarkers(parsedData);
 
-            } else if (showHeatmap) {
-                fetch(apiPath, data => {
-                    let parsedData = JSON.parse(data);
-                    let markers = collectMarkers(parsedData);
-                    renderHeatmap(markers);
-                });
-                
-            } else if (showMarkers) {
-                fetch(apiPath, data => {
-                    let parsedData = JSON.parse(data);
-                    let markers = collectMarkers(parsedData);
-                    renderMarkers(markers);
-                });
-            }
+                if (showHeatmap) renderHeatmap(markers);
+                if (showMarkers) renderMarkers(markers);
+            });
         }
 
         if (showEvents) {
             fetch(apiPath, data => {
                 let parsedData = JSON.parse(data);
-                
+
                 parsedData.events.forEach(event => {
                     renderEvent(event.address, event.title);
                 });
@@ -417,12 +402,12 @@ function generateMap(apiPath,
                 if (showMarkers) {
                     console.error('renderEvents=true and showMarkers=true at the same time, it shouldnt be so');
                 }
-            })
+            });
         }
 
     }
 
     const map = createUI();
     const geocoder = new google.maps.Geocoder();
-    renderUI();
+    renderUI(showLeads, showEvents);
 }
