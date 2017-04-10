@@ -375,39 +375,44 @@ function generateMap(apiPath,
         return clean;
     }
 
-    function renderUI(showLeads, showEvents) {
-        if (showLeads) {
-            fetch(apiPath, data => {
+    function renderUI(showLeads, showEvents, showHeatmap) {
+        shouldFetchData = showLeads || showEvents || showHeatmap;
+
+        if (shouldFetchData) {
+            fetch (apiPath, data => renderData(data, showLeads, showLeads, showHeatmap));
+        }
+
+        function renderData(data, showLeads, showLeads, showHeatmap) {
+            let isHeatmapRendered = false;
+
+            if (showLeads) {
                 let parsedData = JSON.parse(data);
                 let markers = collectMarkers(parsedData);
 
-                if (showHeatmap) renderHeatmap(markers);
+                if (showHeatmap) {
+                    renderHeatmap(markers);
+                    isHeatmapRendered = true;
+                }
                 if (showMarkers) renderMarkers(markers);
-            });
-        }
+            }
 
-        if (showEvents) {
-            fetch(apiPath, data => {
+            if (showEvents) {
                 let parsedData = JSON.parse(data);
 
                 parsedData.events.forEach(event => {
                     renderEvent(event.address, event.title);
                 });
 
-                if (showHeatmap) {
+                if (showHeatmap && !isHeatmapRendered) {
                     let markers = collectMarkers(parsedData);
                     renderHeatmap(markers);
                 }
 
-                if (showMarkers) {
-                    console.error('renderEvents=true and showMarkers=true at the same time, it shouldnt be so');
-                }
-            });
+            }
         }
-
     }
 
     const map = createUI();
     const geocoder = new google.maps.Geocoder();
-    renderUI(showLeads, showEvents);
+    renderUI(showLeads, showEvents, showHeatmap);
 }
