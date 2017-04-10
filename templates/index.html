@@ -15,11 +15,13 @@
         <script>
         generateMap('api/v1/small',
                     'mapContainer', 
-                    DataKind.RENDER_LEADS,
                     {lat: 39.50, lng: -98.35},
-                    MapKind.POLITICAL,
-                    MapKind.HEATMAP,
-                    MapKind.NO_MARKERS)
+                    true, // isPolitical
+                    true, // showEvents
+                    false, // showLeads
+                    true, // showHeatmap
+                    false // showMarkers
+                    )
         </script>
     </body>
 

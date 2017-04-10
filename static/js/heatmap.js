@@ -4,34 +4,23 @@
  *
  * @param {string} apiPath API path
  * @param {string} containerId container ID that the map will be attached to
- * @param {string} kind what kind of data will be rendered. Possible states
- *                      are wrapped into DataKind object.
- *                      - DataKind.RENDER_LEADS  to render leads
- *                      - DataKind.RENDER_EVENTS to render events
- *                      - DataKind.RENDER_EMPTY  to render neither leads nor events
  * @param {{lat: float, lng: float}} initialRegion initial coordinates that
  *                      the map is centered on.
+ * @param {bool} showEvents renders events if set to true.
+ * @param {bool} showLeads renders leads if set to true.
  * @param {bool} isPolitical renders a political map if this is set to true
- *                      and a geographical map otherwise. Supporting enum-like
- *                      object MapKind with the following possible states:
- *                      - MapKind.POLITICAL
- *                      - MapKind.CLASSIC
- * @param {bool} showHeatmap renders the heatmap if set to true. Supporting
- *                      enum-like object MapKind with the bollowing possible states:
- *                      - MapKind.HEATMAP
- *                      - MapKind.NO_HEATMAP
- * @param {bool} showMarkers renders markers if set to true. Supporting enum-like
- *                      object MapKind with the bollowing possible states:
- *                      - MapKind.MARKERS
- *                      - MapKind.NO_MARKERS
+ *                      and a geographical map otherwise.
+ * @param {bool} showHeatmap renders the heatmap if set to true.
+ * @param {bool} showMarkers renders markers if set to true.
  */
 function generateMap(apiPath,
                    containerId,
-                   kind=DataKind.RENDER_EMPTY,
                    initialRegion={lat: 39.50, lng: -98.35},
-                   isPolitical=MapKind.POLITICAL,
-                   showHeatmap=MapKind.HEATMAP,
-                   showMarkers=MapKind.MARKERS) {
+                   isPolitical=true,
+                   showEvents=true,
+                   showLeads=false,
+                   showHeatmap=true,
+                   showMarkers=true) {
 
     /**
      * A class representing Marker data.
@@ -386,77 +375,54 @@ function generateMap(apiPath,
         return clean;
     }
 
-    function renderUI(kind) {
-        switch (kind) {
-            case 'RENDER_LEADS':
-                if (showHeatmap && showMarkers) {
-                    fetch(apiPath, data => {
-                        let parsedData = JSON.parse(data);
-                        let markers = collectMarkers(parsedData);
-                        renderHeatmap(markers);
-                        renderMarkers(markers);
-                    });
-
-                } else if (showHeatmap) {
-                    fetch(apiPath, data => {
-                        let parsedData = JSON.parse(data);
-                        let markers = collectMarkers(parsedData);
-                        renderHeatmap(markers);
-                    });
-                    
-                } else if (showMarkers) {
-                    fetch(apiPath, data => {
-                        let parsedData = JSON.parse(data);
-                        let markers = collectMarkers(parsedData);
-                        renderMarkers(markers);
-                    });
-                }
-            break;
-
-            case 'RENDER_EVENTS':
+    function renderUI() {
+        if (showLeads) {
+            if (showHeatmap && showMarkers) {
                 fetch(apiPath, data => {
                     let parsedData = JSON.parse(data);
-                    
-                    parsedData.events.forEach(event => {
-                        renderEvent(event.address, event.title);
-                    });
+                    let markers = collectMarkers(parsedData);
+                    renderHeatmap(markers);
+                    renderMarkers(markers);
+                });
 
-                    if (showHeatmap) {
-                        let markers = collectMarkers(parsedData);
-                        renderHeatmap(markers);
-                    }
-
-                    if (showMarkers) {
-                        console.error('Kind.RENDER_EVENTS and showMarkers=true at the same time, it shouldnt be so');
-                    }
-                })
-            break;
-
-            case '':
-                // Do nothing, just check function call consistency
-            break;
-
-            default:
-                console.error('kind paramenter must be provided to the generateMap function');
+            } else if (showHeatmap) {
+                fetch(apiPath, data => {
+                    let parsedData = JSON.parse(data);
+                    let markers = collectMarkers(parsedData);
+                    renderHeatmap(markers);
+                });
+                
+            } else if (showMarkers) {
+                fetch(apiPath, data => {
+                    let parsedData = JSON.parse(data);
+                    let markers = collectMarkers(parsedData);
+                    renderMarkers(markers);
+                });
+            }
         }
+
+        if (showEvents) {
+            fetch(apiPath, data => {
+                let parsedData = JSON.parse(data);
+                
+                parsedData.events.forEach(event => {
+                    renderEvent(event.address, event.title);
+                });
+
+                if (showHeatmap) {
+                    let markers = collectMarkers(parsedData);
+                    renderHeatmap(markers);
+                }
+
+                if (showMarkers) {
+                    console.error('renderEvents=true and showMarkers=true at the same time, it shouldnt be so');
+                }
+            })
+        }
+
     }
 
     const map = createUI();
     const geocoder = new google.maps.Geocoder();
-    renderUI(kind);
-}
-
-const DataKind = {
-    'RENDER_LEADS': 'RENDER_LEADS',
-    'RENDER_EVENTS': 'RENDER_EVENTS',
-    'RENDER_EMPTY': ''
-}
-
-const MapKind = {
-    'POLITICAL': true,
-    'CLASSIC': false,
-    'HEATMAP': true,
-    'NO_HEATMAP': false,
-    'MARKERS': true,
-    'NO_MARKERS': false
+    renderUI();
 }
