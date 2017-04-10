@@ -12,7 +12,15 @@
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz8cE-amjE-Cu14gKGM60inb1LPkzDNpo&libraries=visualization"></script>
         <script src="{{ url_for('static', filename='js/heatmap.js') }}"></script>
-        <script>generateMap('api/v1/small', 'mapContainer', {lat: 39.50, lng: -98.35}, true, false, false)</script>
+        <script>
+        generateMap('api/v1/small',
+                    'mapContainer', 
+                    DataKind.RENDER_LEADS,
+                    {lat: 39.50, lng: -98.35},
+                    MapKind.POLITICAL,
+                    MapKind.HEATMAP,
+                    MapKind.NO_MARKERS)
+        </script>
     </body>
 
 </html>
