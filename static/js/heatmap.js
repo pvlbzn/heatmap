@@ -11,7 +11,7 @@
  * @param {bool} showEvents renders events if set to true.
  * @param {bool} showLeads renders leads if set to true.
  * @param {bool} showHeatmap renders the heatmap if set to true.
- * @param {bool} showMarkers renders markers if set to true.
+ * @param {bool} showLeadMarkers renders markers for leads if set to true.
  */
 function generateMap(apiPath,
                    containerId,
@@ -393,7 +393,7 @@ function generateMap(apiPath,
                     renderHeatmap(markers);
                     isHeatmapRendered = true;
                 }
-                if (showMarkers) renderMarkers(markers);
+                if (showLeadMarkers) renderMarkers(markers);
             }
 
             if (showEvents) {
@@ -407,7 +407,6 @@ function generateMap(apiPath,
                     let markers = collectMarkers(parsedData);
                     renderHeatmap(markers);
                 }
-
             }
         }
     }
