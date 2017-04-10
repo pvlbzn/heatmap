@@ -264,10 +264,10 @@ function generateMap(apiPath,
     }
 
     function collectMarkers(data) {
-        let markers = [];
+        const markers = [];
 
         data.events.forEach((event) => {
-            let pureLocations = dataSentinel(event.locations);
+            const pureLocations = dataSentinel(event.locations);
 
             pureLocations.forEach(location => {
                 markers.push(new Marker(
@@ -283,7 +283,7 @@ function generateMap(apiPath,
 
     function renderMarkers(markers) {
         markers.forEach(marker => {
-            let m = new google.maps.Marker({
+            const m = new google.maps.Marker({
                 // Performance issue on a big dataset
                 // animation: google.maps.Animation.DROP,
                 map: map,
@@ -293,7 +293,7 @@ function generateMap(apiPath,
 
             // Block uses `this` pointer
             google.maps.event.addListener(m, 'click', function () {
-                let info = new google.maps.InfoWindow();
+                const info = new google.maps.InfoWindow();
                 info.setContent(
                     '<b>Address:</b> ' + marker.address + '<br>' +
                     '<b>Title:</b> ' + marker.title + '<br>' +
@@ -304,7 +304,7 @@ function generateMap(apiPath,
     }
 
     function renderHeatmap(markers) {
-        let coord = [];
+        const coord = [];
 
         markers.forEach(marker => {
             coord.push(
@@ -312,7 +312,7 @@ function generateMap(apiPath,
             );
         });
 
-        let heatmap = new google.maps.visualization.HeatmapLayer({
+        const heatmap = new google.maps.visualization.HeatmapLayer({
             data: coord,
             map: map,
             radius: 45,
@@ -337,7 +337,7 @@ function generateMap(apiPath,
             'address': addr
         }, (res, status) => {
             if (status == 'OK') {
-                let m = new google.maps.Marker({
+                const m = new google.maps.Marker({
                     map: map,
                     position: res[0].geometry.location,
                     titile: title
@@ -345,7 +345,7 @@ function generateMap(apiPath,
 
                 // Block uses `this` pointer
                 google.maps.event.addListener(m, 'click', function () {
-                    let info = new google.maps.InfoWindow();
+                    const info = new google.maps.InfoWindow();
                     info.setContent(
                         '<b>Address:</b> ' + addr + '<br>' +
                         '<b>Title:</b> ' + title + '<br>');
@@ -363,16 +363,16 @@ function generateMap(apiPath,
      * Source: http://answers.google.com/answers/threadview?id=149284
      */
     function dataSentinel(data) {
-        let north_lat = 49.3457868; // top
-        let west_lng = -124.7844079; // left
-        let east_lng = -66.9513812; // right
-        let south_lat = 24.7433195; // bottom
+        const north_lat = 49.3457868; // top
+        const west_lng = -124.7844079; // left
+        const east_lng = -66.9513812; // right
+        const south_lat = 24.7433195; // bottom
 
-        let clean = data.filter(point =>
-            south_lat <= point.lat &&
-            point.lat <= north_lat &&
-            west_lng <= point.lng &&
-            point.lng <= east_lng);
+        const clean = data.filter(point =>
+              south_lat <= point.lat &&
+              point.lat <= north_lat &&
+              west_lng <= point.lng &&
+              point.lng <= east_lng);
 
         return clean;
     }
@@ -385,8 +385,8 @@ function generateMap(apiPath,
         }
 
         function renderData(data, showLeads, showEvents, showHeatmap) {
-            let parsedData = JSON.parse(data);
-            let markers = collectMarkers(parsedData);
+            const parsedData = JSON.parse(data);
+            const markers = collectMarkers(parsedData);
 
             if (showLeads) {
                 renderMarkers(markers);
