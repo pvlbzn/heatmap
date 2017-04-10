@@ -20,7 +20,7 @@ function generateMap(apiPath,
                    showEvents=true,
                    showLeads=false,
                    showHeatmap=true,
-                   showMarkers=true) {
+                   showLeadMarkers=true) {
 
     /**
      * A class representing Marker data.
