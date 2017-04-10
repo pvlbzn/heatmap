@@ -6,10 +6,10 @@
  * @param {string} containerId container ID that the map will be attached to
  * @param {{lat: float, lng: float}} initialRegion initial coordinates that
  *                      the map is centered on.
- * @param {bool} showEvents renders events if set to true.
- * @param {bool} showLeads renders leads if set to true.
  * @param {bool} isPolitical renders a political map if this is set to true
  *                      and a geographical map otherwise.
+ * @param {bool} showEvents renders events if set to true.
+ * @param {bool} showLeads renders leads if set to true.
  * @param {bool} showHeatmap renders the heatmap if set to true.
  * @param {bool} showMarkers renders markers if set to true.
  */
