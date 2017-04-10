@@ -9,18 +9,29 @@
  *                      - DataKind.RENDER_LEADS  to render leads
  *                      - DataKind.RENDER_EVENTS to render events
  *                      - DataKind.RENDER_EMPTY  to render neither leads nor events
- * @param {{lat: float, lng: float}} initialRegion initial coordinates that the map is centered on
- * @param {bool} isPolitical renders a political map if this is set to true and a geographical map otherwise
- * @param {bool} showHeatmap renders the heatmap if set to true
- * @param {bool} showMarkers renders markers if set to true
+ * @param {{lat: float, lng: float}} initialRegion initial coordinates that
+ *                      the map is centered on.
+ * @param {bool} isPolitical renders a political map if this is set to true
+ *                      and a geographical map otherwise. Supporting enum-like
+ *                      object MapKind with the following possible states:
+ *                      - MapKind.POLITICAL
+ *                      - MapKind.CLASSIC
+ * @param {bool} showHeatmap renders the heatmap if set to true. Supporting
+ *                      enum-like object MapKind with the bollowing possible states:
+ *                      - MapKind.HEATMAP
+ *                      - MapKind.NO_HEATMAP
+ * @param {bool} showMarkers renders markers if set to true. Supporting enum-like
+ *                      object MapKind with the bollowing possible states:
+ *                      - MapKind.MARKERS
+ *                      - MapKind.NO_MARKERS
  */
 function generateMap(apiPath,
                    containerId,
                    kind=DataKind.RENDER_EMPTY,
                    initialRegion={lat: 39.50, lng: -98.35},
-                   isPolitical=true,
-                   showHeatmap=true,
-                   showMarkers=true) {
+                   isPolitical=MapKind.POLITICAL,
+                   showHeatmap=MapKind.HEATMAP,
+                   showMarkers=MapKind.MARKERS) {
 
     /**
      * A class representing Marker data.
