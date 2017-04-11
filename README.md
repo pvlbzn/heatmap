@@ -19,11 +19,11 @@ Open the browser at address http://127.0.0.1:5000/
 
 _Markers_, triggered by _Fetch Markers_ button
 
-![markers](https://github.com/pvlbzn/client_showcase/raw/master/heatmap/ui/markers.png)
+![markers](https://github.com/pvlbzn/heatmap/raw/master/ui/markers.png)
 
 _Heatmap_, triggered by _Fetch Heatmap_ button
 
-![heatmap](https://github.com/pvlbzn/client_showcase/blob/master/heatmap/ui/heatmap.png)
+![heatmap](https://github.com/pvlbzn/heatmap/raw/master/ui/heatmap.png)
 
 _Labels_
-![both](https://github.com/pvlbzn/client_showcase/raw/master/heatmap/ui/labels.png)
+![both](https://github.com/pvlbzn/heatmap/raw/master/ui/labels.png)
